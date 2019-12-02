@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     server_address = (args.interface, args.port)
-    logger = logging.getLogger('caching_server')
+    logger = logging.getLogger('mapcache')
     logger.level = logging.DEBUG
     cache = FilesInFolderCache(folder=args.folder, logger=logger)
     def create_handler(*args, **kwargs):
