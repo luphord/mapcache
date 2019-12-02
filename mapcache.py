@@ -5,6 +5,8 @@ http://<external-server>/... and caches the result locally.
 Later requests to the same address will be served from cache.
 '''
 
+__version__ = '0.1.0'
+
 import os
 import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -55,7 +57,7 @@ class CacheHandler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
 
-if __name__ == '__main__':
+def main():
     from argparse import ArgumentParser
 
     parser = ArgumentParser(description=__doc__)
@@ -84,3 +86,7 @@ if __name__ == '__main__':
 
     httpd = HTTPServer(server_address, create_handler)
     httpd.serve_forever()
+
+
+if __name__ == '__main__':
+    main()
