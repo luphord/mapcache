@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-'''Simple caching server. Forwards calls to http://<server-address>/<external-server>/...
-to http://<external-server>/... and caches the result locally. Later requests to the same
-address will be served from cache.
+'''Simple caching server. Forwards calls to
+http://<server-address>/<external-server>/... to
+http://<external-server>/... and caches the result locally.
+Later requests to the same address will be served from cache.
 '''
 
-import os, logging
+import os
+import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from hashlib import sha256
 from urllib.request import urlopen
+
 
 class FilesInFolderCache:
     def __init__(self, folder='.', logger=None):
@@ -35,6 +38,7 @@ class FilesInFolderCache:
                 f.write(data)
             return data
 
+
 class CacheHandler(BaseHTTPRequestHandler):
     def __init__(self, cache, *args, **kwargs):
         self.cache = cache
@@ -50,21 +54,33 @@ class CacheHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument('-f', '--folder', help='folder for storing cache files, defaults to ./cache', default='./cache', required=False)
-    parser.add_argument('-i', '--interface', help='network interface to listen on, defaults to localhost', default='localhost', required=False)
-    parser.add_argument('-p', '--port', help='server port, defaults to 8000', default=8000, required=False)
+    parser.add_argument('-f', '--folder',
+                        help='folder for storing cache files, \
+                              defaults to ./cache',
+                        default='./cache',
+                        required=False)
+    parser.add_argument('-i', '--interface',
+                        help='network interface to listen on, \
+                              defaults to localhost',
+                        default='localhost',
+                        required=False)
+    parser.add_argument('-p', '--port',
+                        help='server port, defaults to 8000',
+                        default=8000, required=False)
 
     args = parser.parse_args()
     server_address = (args.interface, args.port)
     logger = logging.getLogger('mapcache')
     logger.level = logging.DEBUG
     cache = FilesInFolderCache(folder=args.folder, logger=logger)
+
     def create_handler(*args, **kwargs):
         return CacheHandler(cache, *args, **kwargs)
+
     httpd = HTTPServer(server_address, create_handler)
     httpd.serve_forever()
-
