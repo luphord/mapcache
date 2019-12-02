@@ -73,7 +73,7 @@ def main():
                         required=False)
     parser.add_argument('-p', '--port',
                         help='server port, defaults to 8000',
-                        default=8000, required=False)
+                        default=8000, type=int, required=False)
 
     args = parser.parse_args()
     server_address = (args.interface, args.port)
