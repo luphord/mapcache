@@ -5,7 +5,7 @@ http://<external-server>/... and caches the result locally.
 Later requests to the same address will be served from cache.
 '''
 
-__version__ = '__version__ = '0.1.1''
+__version__ = '__version__ = '0.1.2''
 
 import os
 import logging
