@@ -1,5 +1,7 @@
 # mapcache
 
-[<img src="https://img.shields.io/pypi/v/mapcache.svg">](https://pypi.python.org/pypi/mapcache)
+![PyPI](https://img.shields.io/pypi/v/mapcache)
+
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/luphord/mapcache)
 
 Simple caching server for map tiles.
