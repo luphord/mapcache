@@ -24,12 +24,13 @@ class FilesInFolderCache:
         key = sha256(path.encode('UTF8'))
         cache_filename = os.path.join(self.folder, key.hexdigest())
         if os.path.exists(cache_filename):
-            self.logger.info('{} available in cache'.format(path))
+            self.logger.debug('{} available in cache'.format(path))
             with open(cache_filename, 'rb') as f:
                 return f.read()
         else:
-            self.logger.info('{} missing in cache'.format(path))
+            self.logger.debug('{} missing in cache'.format(path))
             url = 'http:/{}'.format(path)
+            self.logger.debug('Requesting {}'.format(url))
             try:
                 with urlopen(url) as f:
                     data = f.read()
@@ -96,6 +97,7 @@ var mymap = L.map('mapid').setView([51.505, -0.09], 13);
 
 
 def main():
+    import sys
     from argparse import ArgumentParser
 
     parser = ArgumentParser(description=__doc__)
@@ -115,6 +117,7 @@ def main():
 
     args = parser.parse_args()
     server_address = (args.interface, args.port)
+    logging.basicConfig(stream=sys.stdout)
     logger = logging.getLogger('mapcache')
     logger.level = logging.DEBUG
     cache = FilesInFolderCache(folder=args.folder, logger=logger)
@@ -122,6 +125,7 @@ def main():
     def create_handler(*args, **kwargs):
         return CacheHandler(cache, EXAMPLE_PAGE, *args, **kwargs)
 
+    logger.info('Starting mapcache on {}:{}'.format(*server_address))
     httpd = HTTPServer(server_address, create_handler)
     httpd.serve_forever()
 
