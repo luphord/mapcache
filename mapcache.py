@@ -41,6 +41,37 @@ class FilesInFolderCache:
             return data
 
 
+EXAMPLE_PAGE = b'''
+<!DOCTYPE html>
+<html>
+<head>
+<!-- This is a leaflet.js quck start example adapted to using mapcache;
+     See https://leafletjs.com/examples/quick-start/ for original guide -->
+    <title>Using leaflet.js with mapcache example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+</head>
+<body>
+<div id="mapid" style="width: 800px; height: 600px;"></div>
+<script>
+var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    L.tileLayer('/a.tile.openstreetmap.de/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    'Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox/streets-v11'
+}).addTo(mymap);
+
+</script>
+
+</body>
+</html>
+'''
+
+
 class CacheHandler(BaseHTTPRequestHandler):
     def __init__(self, cache, *args, **kwargs):
         self.cache = cache
@@ -48,7 +79,10 @@ class CacheHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         try:
-            data = self.cache[self.path]
+            if self.path == '/':
+                data = EXAMPLE_PAGE
+            else:
+                data = self.cache[self.path]
         except Exception as e:
             self.send_error(404)
             return
