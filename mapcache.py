@@ -70,7 +70,8 @@ EXAMPLE_PAGE = b'''
     <title>Using leaflet.js with mapcache example</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 </head>
 <body>
@@ -79,8 +80,10 @@ EXAMPLE_PAGE = b'''
 var mymap = L.map('mapid').setView([51.505, -0.09], 13);
     L.tileLayer('/a.tile.openstreetmap.de/{z}/{x}/{y}.png', {
     maxZoom: 18,
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">' +
+    'OpenStreetMap</a> contributors, ' +
+    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">' +
+    'CC-BY-SA</a>, ' +
     'Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox/streets-v11'
 }).addTo(mymap);
