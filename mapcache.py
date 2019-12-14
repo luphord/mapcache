@@ -41,6 +41,26 @@ class FilesInFolderCache:
             return data
 
 
+class CacheHandler(BaseHTTPRequestHandler):
+    def __init__(self, cache, root_page, *args, **kwargs):
+        self.cache = cache
+        self.root_page = root_page
+        super().__init__(*args, **kwargs)
+
+    def do_GET(self):
+        try:
+            if self.root_page and self.path == '/':
+                data = self.root_page
+            else:
+                data = self.cache[self.path]
+        except Exception as e:
+            self.send_error(404)
+            return
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(data)
+
+
 EXAMPLE_PAGE = b'''
 <!DOCTYPE html>
 <html>
@@ -72,25 +92,6 @@ var mymap = L.map('mapid').setView([51.505, -0.09], 13);
 '''
 
 
-class CacheHandler(BaseHTTPRequestHandler):
-    def __init__(self, cache, *args, **kwargs):
-        self.cache = cache
-        super().__init__(*args, **kwargs)
-
-    def do_GET(self):
-        try:
-            if self.path == '/':
-                data = EXAMPLE_PAGE
-            else:
-                data = self.cache[self.path]
-        except Exception as e:
-            self.send_error(404)
-            return
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(data)
-
-
 def main():
     from argparse import ArgumentParser
 
@@ -116,7 +117,7 @@ def main():
     cache = FilesInFolderCache(folder=args.folder, logger=logger)
 
     def create_handler(*args, **kwargs):
-        return CacheHandler(cache, *args, **kwargs)
+        return CacheHandler(cache, EXAMPLE_PAGE, *args, **kwargs)
 
     httpd = HTTPServer(server_address, create_handler)
     httpd.serve_forever()
